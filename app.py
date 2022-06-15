@@ -14,11 +14,13 @@ app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
 connect_db(app)
 db.create_all()
 
+
 @app.get("/")
 def homepage():
     '''redirect to users list'''
 
-    return redirect('/users') #add url
+    return redirect('/users')  # add url
+
 
 @app.get("/users")
 def list_users():
@@ -26,27 +28,30 @@ def list_users():
     users = User.query.all()
     return render_template("users.html", users=users)
 
+
 @app.get('/users/new')
 def show_new_user_form():
     '''Bring to new user form page'''
 
     return render_template('new_user.html')
 
+
 @app.post("/users/new")
 def add_user():
     '''add user and redirect to list'''
 
-    fname= request.form['first_name']
+    fname = request.form['first_name']
     lname = request.form['last_name']
     image = request.form['image']
-    image = ('default') #create global variable later
+    image = ('default')  # create global variable later
 
-    user = User(first_name = fname, last_name = lname,
-    image = image)
+    user = User(first_name=fname, last_name=lname,
+                image=image)
     db.session.add(user)
     db.session.commit()
 
-    return redirect('/users')#fill in later
+    return redirect('/users')  # fill in later
+
 
 @app.get("/users/<int:user_id>")
 def show_user(user_id):
@@ -55,6 +60,7 @@ def show_user(user_id):
     user = User.query.get_or_404(user_id)
     return render_template("user_detail.html", user=user)
 
+
 @app.get('/users/<int:user_id>/edit')
 def show_edit_user_info(user_id):
     """Show the edit page for a user"""
@@ -62,14 +68,15 @@ def show_edit_user_info(user_id):
     user = User.query.get_or_404(user_id)
     return render_template("edit_user.html", user=user)
 
+
 @app.post("/users/<int:user_id>/edit")
 def edit_user(user_id):
     '''Process the edit form, returning the user to the user list'''
 
-    fname= request.form['first_name']
+    fname = request.form['first_name']
     lname = request.form['last_name']
     image = request.form['image']
-    image = ('default') #create global variable later
+    image = ('default')  # create global variable later
 
     user = User.query.get_or_404(user_id)
     user.first_name = fname,
@@ -79,6 +86,7 @@ def edit_user(user_id):
     db.session.commit()
 
     return redirect('/users')
+
 
 @app.post('/user/<int:user_id>/delete')
 def delet_user(user_id):
