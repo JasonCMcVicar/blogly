@@ -21,6 +21,10 @@ class User(db.Model):
                         nullable=False)
     image_url = db.Column(db.String)
 
+    def __repr__(self):
+        rep = f'<User: {self.first_name} {self.last_name}, id={self.id} >'
+        return rep
+
 
 
 # CREATE TABLE models(

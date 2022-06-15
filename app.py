@@ -1,7 +1,7 @@
 """Blogly application."""
 
-from flask import Flask
-from models import db, connect_db
+from flask import Flask, redirect, render_template, request
+from models import db, connect_db, User
 from flask_debugtoolbar import DebugToolbarExtension
 
 
@@ -27,7 +27,7 @@ def add_user():
     fname= request.form['first_name']
     lname = request.form['last_name']
     image = request.form['image']
-    image = (default) #create global variable later
+    image = ('default') #create global variable later
 
     user = User(first_name = fname, last_name = lname,
     image = image)
@@ -35,3 +35,10 @@ def add_user():
     db.session.commit()
 
     return redirect(...)#fill in later
+
+@app.get("/<int:user_id>")
+def show_pet(pet_id):
+    """Show info on a single user."""
+
+    user = User.query.get_or_404(pet_id)
+    return render_template("detail.html", user=user)
