@@ -15,12 +15,24 @@ connect_db(app)
 db.create_all()
 
 @app.get("/")
+def homepage():
+    '''redirect to users list'''
+
+    return redirect('/users') #add url
+
+@app.get("/users")
 def list_users():
     '''list users'''
     users = User.query.all()
-    return render_template("TBD", users=users) #add url
+    return render_template("users.html", users=users)
 
-@app.post("/")
+@app.get('/users/new')
+def show_new_user_form():
+    '''Bring to new user form page'''
+
+    return render_template('new_user.html')
+
+@app.post("/users/new")
 def add_user():
     '''add user and redirect to list'''
 
@@ -34,11 +46,45 @@ def add_user():
     db.session.add(user)
     db.session.commit()
 
-    return redirect(...)#fill in later
+    return redirect('/users')#fill in later
 
-@app.get("/<int:user_id>")
-def show_pet(pet_id):
+@app.get("/users/<int:user_id>")
+def show_user(user_id):
     """Show info on a single user."""
 
-    user = User.query.get_or_404(pet_id)
-    return render_template("detail.html", user=user)
+    user = User.query.get_or_404(user_id)
+    return render_template("user_detail.html", user=user)
+
+@app.get('/users/<int:user_id>/edit')
+def show_edit_user_info(user_id):
+    """Show the edit page for a user"""
+
+    user = User.query.get_or_404(user_id)
+    return render_template("edit_user.html", user=user)
+
+@app.post("/users/<int:user_id>/edit")
+def edit_user(user_id):
+    '''Process the edit form, returning the user to the user list'''
+
+    fname= request.form['first_name']
+    lname = request.form['last_name']
+    image = request.form['image']
+    image = ('default') #create global variable later
+
+    user = User.query.get_or_404(user_id)
+    user.first_name = fname,
+    user.last_name = lname
+    user.image = image
+
+    db.session.commit()
+
+    return redirect('/users')
+
+@app.post('/user/<int:user_id>/delete')
+def delet_user(user_id):
+    """Delete user from the list"""
+
+    user = User.query.get_or_404(user_id)
+    user.query.delete()
+
+    return redirect('/users')
