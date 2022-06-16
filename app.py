@@ -11,6 +11,11 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_ECHO'] = True
 app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = True
 
+app.config['SECRET_KEY'] = 'top-secret'
+app.debug=True
+toolbar = DebugToolbarExtension(app)
+
+
 connect_db(app)
 db.create_all()
 
@@ -42,13 +47,13 @@ def add_user():
 
     fname = request.form['first_name']
     lname = request.form['last_name']
-    image = request.form['image']
+    image_url = request.form['image_url']
 
-    if not image:
-        image = DEFAULT_IMAGE_URL
+    if not image_url:
+        image_url = DEFAULT_IMAGE_URL
 
     user = User(first_name=fname, last_name=lname,
-                image_url=image)
+                image_url=image_url)
     db.session.add(user)
     db.session.commit()
 
@@ -77,12 +82,12 @@ def edit_user(user_id):
 
     fname = request.form['first_name']
     lname = request.form['last_name']
-    image = request.form['image']
+    image_url = request.form['image_url']
 
     user = User.query.get_or_404(user_id)
     user.first_name = fname,
     user.last_name = lname
-    user.image = image
+    user.image_url = image_url
 
     db.session.commit()
 

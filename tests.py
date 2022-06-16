@@ -69,8 +69,11 @@ class UserViewTestCase(TestCase):
     def test_add_user(self):
         with self.client as c:
             resp = c.post("/users/new",
-            data ={'first_name':'ftest', 'last_name':'ltest'})
-            self.assertEqual(resp.status_code, 200)
-            html = resp.get_data(as_text=True)
-            self.assertIn("ftest", html)
+                data={'first_name':'test1', 'last_name':'test2', 'image_url':'https://i.stack.imgur.com/l60Hf.png'})
+            self.assertEqual(resp.status_code, 302)
+            self.assertEqual(resp.location, "/users")
 
+            # html = resp.get_data(as_text=True)
+            # self.assertIn("test1", html)
+
+    #def test_
