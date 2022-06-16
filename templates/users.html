@@ -3,8 +3,8 @@
 {% block content %}
 <h1>User List</h1>
 <ul>
-  {%for user in Users%}
-  <li>{{user}}</li>
+  {%for user in users%}
+  <li>{{user.first_name}} {{user.last_name}}</li>
   {% endfor %}
 </ul>
 <button>Add User</button>
