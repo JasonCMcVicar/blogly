@@ -1,15 +1,15 @@
 """Blogly application."""
 
 from flask import Flask, redirect, render_template, request
-from models import db, connect_db, User
+from models import db, connect_db, User, DEFAULT_IMAGE_URL
 from flask_debugtoolbar import DebugToolbarExtension
 
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///flask-blogly'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///flask_blogly'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_ECHO'] = True
-app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
+app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = True
 
 connect_db(app)
 db.create_all()
@@ -43,10 +43,12 @@ def add_user():
     fname = request.form['first_name']
     lname = request.form['last_name']
     image = request.form['image']
-    image = ('default')  # create global variable later
+
+    if not image:
+        image = DEFAULT_IMAGE_URL
 
     user = User(first_name=fname, last_name=lname,
-                image=image)
+                image_url=image)
     db.session.add(user)
     db.session.commit()
 
@@ -76,7 +78,6 @@ def edit_user(user_id):
     fname = request.form['first_name']
     lname = request.form['last_name']
     image = request.form['image']
-    image = ('default')  # create global variable later
 
     user = User.query.get_or_404(user_id)
     user.first_name = fname,

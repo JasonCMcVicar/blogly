@@ -3,13 +3,13 @@
 {% block content %}
 <h1>Create a User</h1>
 
-<form action="">
+<form action="/users/new" method="POST">
   <label>
     <input type="text" name="first_name" required></label>
   <label>
     <input type="text" name="last_name" required></label>
   <label>
-    <input type="image" name="image" required></label>
+    <input type="text" name="image"></label>
   <button>Add</button>
 </form>
 
