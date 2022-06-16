@@ -2,8 +2,12 @@
 {% block title %}{user.first_name} {user.last_name}{% endblock %}
 {% block content %}
 <h1>{{user.first_name}} {{user.last_name}}</h1>
-<img src={{user.image_url}} alt="picture of {{user.first_name}} {{user.last_name}}">
-<button>Edit</button> <button>Delete</button>
+<img src={{user.image_url}}
+alt="picture of {{user.first_name}} {{user.last_name}}">
+<form action="{{user.id}}/edit">
+<button>Edit</button> </form>
+<form action="{{user.id}}/delete" method="POST">
+  <button>Delete</button> </form>
 
 <!--this is the user_detail page (for testing)-->
 

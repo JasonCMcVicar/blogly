@@ -69,11 +69,43 @@ class UserViewTestCase(TestCase):
     def test_add_user(self):
         with self.client as c:
             resp = c.post("/users/new",
-                data={'first_name':'test1', 'last_name':'test2', 'image_url':'https://i.stack.imgur.com/l60Hf.png'})
+                data={'first_name':'test1', 'last_name':'test2',
+                'image_url':'https://i.stack.imgur.com/l60Hf.png'})
             self.assertEqual(resp.status_code, 302)
             self.assertEqual(resp.location, "/users")
 
-            # html = resp.get_data(as_text=True)
-            # self.assertIn("test1", html)
+    def test_add_user_redirect(self):
+        with self.client as c:
+            resp = c.post("/users/new",
+                data={'first_name':'test1', 'last_name':'test2',
+                'image_url':'https://i.stack.imgur.com/l60Hf.png'},
+                follow_redirects=True)
+            html = resp.get_data(as_text=True)
+            self.assertEqual(resp.status_code, 200)
+            self.assertIn("test1", html)
 
-    #def test_
+    def test_single_user_page(self):
+        with self.client as c:
+            test_user1 = User(first_name="test_first",
+                                    last_name="test_last",
+                                    image_url=None)
+
+            db.session.add_all([test_user1])
+            db.session.commit()
+            resp = c.get(f"/users/{test_user1.id}")
+            self.assertEqual(resp.status_code, 200)
+            html = resp.get_data(as_text=True)
+            self.assertIn("user_detail page", html)
+
+    def test_edit_user_page(self):
+        with self.client as c:
+            test_user1 = User(first_name="test_first",
+                                    last_name="test_last",
+                                    image_url=None)
+
+            db.session.add_all([test_user1])
+            db.session.commit()
+            resp = c.get(f"/users/{test_user1.id}/edit")
+            self.assertEqual(resp.status_code, 200)
+            html = resp.get_data(as_text=True)
+            self.assertIn("edit_users page", html)

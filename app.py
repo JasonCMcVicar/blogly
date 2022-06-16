@@ -1,6 +1,6 @@
 """Blogly application."""
 
-from flask import Flask, redirect, render_template, request
+from flask import Flask, redirect, render_template, request, session
 from models import db, connect_db, User, DEFAULT_IMAGE_URL
 from flask_debugtoolbar import DebugToolbarExtension
 
@@ -9,7 +9,7 @@ app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///flask_blogly'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_ECHO'] = True
-app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = True
+app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
 
 app.config['SECRET_KEY'] = 'top-secret'
 app.debug=True
@@ -94,11 +94,12 @@ def edit_user(user_id):
     return redirect('/users')
 
 
-@app.post('/user/<int:user_id>/delete')
-def delet_user(user_id):
+@app.post('/users/<int:user_id>/delete')
+def delete_user(user_id):
     """Delete user from the list"""
 
     user = User.query.get_or_404(user_id)
-    user.query.delete()
+    db.session.delete(user)
+    db.session.commit()
 
     return redirect('/users')
