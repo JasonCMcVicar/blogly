@@ -32,6 +32,25 @@ class User(db.Model):
         return rep
 
 
-# CREATE TABLE models(
-#     id SERIAL PRIMARY KEY,
-# )
+class Post(db.Model):
+    '''post'''
+    __tablename__ = "users"
+
+    id = db.Column(db.Integer,
+                   primary_key=True,
+                   autoincrement=True)
+    title = db.Column(db.String(20),
+                           nullable=False)
+    content = db.Column(db.String,
+                          nullable=False)
+    created_at = db.Column(db.DateTime,
+                            nullable=False,
+                            default=db.func.now())
+    user_id=db.Column(db.Integer.
+                        db.ForeignKey('Users.id'))
+
+    user = db.relationship('User')
+
+    def __repr__(self):
+        rep = f'<User: {self.first_name} {self.last_name}, id={self.id} >'
+        return rep

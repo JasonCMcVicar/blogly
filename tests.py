@@ -109,3 +109,5 @@ class UserViewTestCase(TestCase):
             self.assertEqual(resp.status_code, 200)
             html = resp.get_data(as_text=True)
             self.assertIn("edit_users page", html)
+
+            #failure tests
