@@ -1,7 +1,7 @@
 """Blogly application."""
 
 from flask import Flask, redirect, render_template, request
-from models import db, connect_db, User, DEFAULT_IMAGE_URL
+from models import db, connect_db, User, DEFAULT_IMAGE_URL, Post
 from flask_debugtoolbar import DebugToolbarExtension
 
 
@@ -103,3 +103,30 @@ def delete_user(user_id):
     db.session.commit()
 
     return redirect('/users')
+
+#########################################
+
+@app.get('/users/<int:user_id>/posts/new')
+def show_new_post_page(user_id):
+    '''show to allow adding post'''
+    user = User.query.get_or_404(user_id)
+
+    return render_template("new_post.html", user=user)
+
+
+@app.post('/users/<int:user_id>/posts/new')
+def save_new_post(user_id):
+    '''save a new blog post'''
+    user = User.query.get_or_404(user_id)
+
+    post_title = request.form['post_title']
+    post_content = request.form['post_content']
+
+
+    post = Post(title=post_title, content=post_content, user_id=user.id)
+
+    db.session.add(post)
+    db.session.commit()
+
+
+    return redirect('/')

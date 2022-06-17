@@ -34,7 +34,7 @@ class User(db.Model):
 
 class Post(db.Model):
     '''post'''
-    __tablename__ = "users"
+    __tablename__ = "posts"
 
     id = db.Column(db.Integer,
                    primary_key=True,
@@ -46,11 +46,12 @@ class Post(db.Model):
     created_at = db.Column(db.DateTime,
                             nullable=False,
                             default=db.func.now())
-    user_id=db.Column(db.Integer.
-                        db.ForeignKey('Users.id'))
+    user_id=db.Column(db.Integer,
+                        db.ForeignKey('users.id'))
 
-    user = db.relationship('User')
+    user = db.relationship('User', backref='posts')
 
     def __repr__(self):
-        rep = f'<User: {self.first_name} {self.last_name}, id={self.id} >'
+        rep = f'''<Post: {self.title} {self.created_at} {self.user_id},
+         id={self.id} >'''
         return rep
